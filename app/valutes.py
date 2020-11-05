@@ -1,14 +1,20 @@
+import json
 import requests
 
+# API Central Bank
 URL = 'https://www.cbr-xml-daily.ru/daily_json.js'
 
-
-def get_json(url):
+"""
+Module model, with basic methods for managing the api central bank. 
+The main module uses these methods to translate the requested currency rate into a chat.
+  
+"""
+def get_json(url) -> json:
     r = requests.get(url)
     return r.json(encoding='utf-8')
 
 
-def list_valutes_for_print_users(json_):
+def list_currencies_to_print(json_: json) -> list:
     list_ = []
     for k, v in json_['Valute'].items():
         a = '{0} {1}'.format(k, v['Name'])
@@ -16,7 +22,7 @@ def list_valutes_for_print_users(json_):
     return list_
 
 
-def valutes_name_list(json_):
+def currency_name_list(json_: json) -> list:
     list_ = []
     for k, v in json_['Valute'].items():
         a = '{0}'.format(k)
@@ -24,7 +30,7 @@ def valutes_name_list(json_):
     return list_
 
 
-def get_valute_value(valute, json_=get_json(URL)):
+def get_currency_value(valute: str, json_=get_json(URL)) -> str:
     for k, v in json_['Valute'].items():
         if valute.casefold() == k.casefold():
             return "{0} {1}".format(k, v['Value'])
