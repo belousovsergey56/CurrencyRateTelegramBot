@@ -1,25 +1,29 @@
+import json
+import requests
 from flask import Flask
 from flask_sslify import SSLify
 from flask import request
-import requests
-from app.valutes import list_valutes_for_print_users, get_valute_value, URL as U, get_json, valutes_name_list
+from app.valutes import list_currencies_to_print, get_currency_value, URL as U, get_json, currency_name_list
 
 app = Flask('__name__')
 
-# создаёт защищённное соединение по протоколу https
+# create https protocol
 lify = SSLify(app)
+
 URL = 'https://api.telegram.org/'
 TOKEN = 'bot1337479154:AAHV1tBn8jHcSbUk6RbcRIA9M95FWjSYwGs/'
 
 
-# отправка сообщений от бота в чат
-def send_message(chat_id, text='Hola'):
+# send message bot to chat
+def send_message(chat_id: str, text='Hola') -> json:
     url = URL + TOKEN + 'sendMessage'
     answer = {'chat_id': chat_id, 'text': text}
     r = requests.post(url, json=answer)
     return r.json()
 
-
+"""
+Basic bot telegram method, receives messages from web hook, processes and sends the required message 
+"""
 @app.route('/', methods=['POST', 'GET'])
 def index():
     if request.method == 'POST':
@@ -29,8 +33,8 @@ def index():
         help_meaasge = "Этот бот выводит актуальный курс валют по ЦБ относительно рубля.\n" \
                        "Посмотреть список доступной валюты, можно спомощью команды /list.\n" \
                        "Чтобы узнать курс доллара, нужно ввести стандартное обозначение этой единицы валюты: USD"
-        list_valut = list_valutes_for_print_users(get_json(U))
-        name_valut = valutes_name_list(get_json(U))
+        list_valut = list_currencies_to_print(get_json(U))
+        name_valut = currency_name_list(get_json(U))
         n = ''
         for k in name_valut:
             n += k + ','
@@ -45,7 +49,7 @@ def index():
                 list += k + '\n'
             send_message(chat_id, text=list)
         elif message:
-            send_message(chat_id, text=get_valute_value(message))
+            send_message(chat_id, text=get_currency_value(message))
     return '<h1> Bot is started </h1>'
 
 
