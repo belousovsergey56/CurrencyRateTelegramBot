@@ -11,7 +11,7 @@ app = Flask('__name__')
 lify = SSLify(app)
 
 URL = 'https://api.telegram.org/'
-TOKEN = 'bot1337479154:AAHV1tBn8jHcSbUk6RbcRIA9M95FWjSYwGs/'
+TOKEN = 'TOKEN:TOKEN'
 
 
 # send message bot to chat
